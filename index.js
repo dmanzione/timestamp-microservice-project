@@ -6,7 +6,7 @@ var express = require('express');
 var app = express();
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
+// so that your API is remotely testable by FCC
 var cors = require('cors');
 app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
 
@@ -19,11 +19,58 @@ app.get("/", function (req, res) {
 });
 
 
-// your first API endpoint... 
+// your first API endpoint...
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// second api endpoint
+
+app.get('/api/:t',function(req, res){
+  let time;
+
+  if(req.params.t.toString().trim().length==0){
+    time = Date.now();
+  }else {
+    time =req.params.t;
+  }
+
+  if(Date.parse(time)){
+      time = Date.parse(time)
+
+    }else {
+      if(parseInt(time))
+      time = parseInt(time);
+     }
+
+
+      let timeObject;
+
+      if(new Date(time).toString()=="Invalid Date"){
+  		timeObject = {error: "Invalid Date"}
+
+  	}else{
+
+    		timeObject = {
+
+        		"unix":new Date(time).valueOf(),
+       		 "utc":new Date(time).toUTCString()
+    }
+  }
+res.json(timeObject);
+});
+
+
+app.get("/api",function(req, res){
+  let time = Date.now();
+  let timeObject = {
+    "unix":time,
+    "utc":new Date(time).toUTCString()
+  }
+
+  res.json(timeObject);
+
+});
 
 
 // listen for requests :)
